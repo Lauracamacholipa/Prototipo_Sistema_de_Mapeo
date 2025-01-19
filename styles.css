@@ -1,0 +1,147 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e9ffe8;
+    color: #339653;
+    line-height: 1.6;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #bafb94;
+    padding: 1rem 2rem;
+}
+
+.logo img {
+    width: 150px; /* Ajusta el tamaño de la imagen del logo */
+    height: auto;
+}
+
+.nav-links {
+    display: flex;
+    list-style-type: none;
+    justify-content: center; /* Centra los enlaces */
+    flex: 1; /* Permite que los enlaces ocupen espacio adicional */
+}
+
+.nav-links li {
+    margin: 0 1rem;
+}
+
+.nav-links a {
+    color: #339653;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #f4a261;
+}
+
+.user-actions{
+    display: flex;
+    align-items: center;
+}
+
+.user-actions .search-box {
+    padding: 0.5rem;
+    border: 1px solid #339653;
+    border-radius: 5px;
+    margin-right: 0.5rem;
+}
+
+.user-actions .user-icon,
+.user-actions .settings-icon {
+    width: 30px;
+    height: 30px;
+    margin-left: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid #339653;
+    object-fit: cover;
+}
+
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3rem 2rem;
+    background-color: #bafb94;
+}
+
+.hero-left {
+    flex: 1;
+    padding: 1rem;
+}
+
+.hero-left h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+}
+
+
+.cta-button {
+    background-color: #339653;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #286940;
+}
+
+.map-section {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.map-container {
+    margin: 1rem auto;
+    width: 80%;
+    max-width: 600px;
+}
+
+.map-img {
+    width: 100%;
+    border-radius: 10px;
+    border: 2px solid #339653;
+}
+
+.map-search {
+    margin-top: 1rem;
+}
+
+.map-search-box {
+    padding: 0.5rem;
+    width: 60%;
+    max-width: 400px;
+    border: 1px solid #339653;
+    border-radius: 5px;
+}
+
+@media screen and (max-width: 768px) {
+    .nav-links {
+        display: none;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+}
