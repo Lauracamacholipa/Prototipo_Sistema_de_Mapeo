@@ -1,6 +1,16 @@
 <?php
+    // Iniciar la sesión solo si no está ya iniciada
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // Verificar si el usuario está logueado
+    $usuario_id = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : null;
+    $usuario_nombre = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : null;
+?>
+<?php
 // Iniciar la sesión
-session_start();
+
 
 // Configuración de la base de datos
 $host = 'localhost';
@@ -49,15 +59,32 @@ mysqli_close($enlace);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-iniciarsesion.css">
 </head>
 <body>
     <header>
-        <nav class="navbar">
+    <nav class="navbar">
             <div class="logo">
-                <a href="index.php">
-                    <img src="img/logo.png" alt="Logo" class="logo-img">
-                </a>
+                <a href="#"><img src="img/logo.png" alt="Logo" class="logo-img"></a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.php">Inicio</a></li>
+                <li><a href="mapaDenuncias.php">Mapa de denuncias</a></li>
+                <li><a href="contacto.php">Contacto</a></li>
+                <li><a href="#Comentarios">Comentarios</a></li>
+            </ul>
+            <div class="user-actions">
+                <div class="nav-buttons">
+                    <?php if ($usuario_nombre): ?>
+                        <p>Bienvenido, <?php echo $usuario_nombre; ?>!</p>
+                        <a href="mostrarUsuario.php?id=<?php echo $usuario_id; ?>">
+                            <img src="img/tuerca.png" alt="Ajustes" class="settings-icon">
+                        </a>
+                    <?php else: ?>
+                        <button onclick="window.location.href='crearCuenta.php'" class="btn-crear-cuenta">Crear usuario</button>
+                        <button onclick="window.location.href='iniciarSesion.php'" class="btn-iniciar-sesion">Iniciar sesión</button>
+                    <?php endif; ?>
+                </div>
             </div>
         </nav>
     </header>

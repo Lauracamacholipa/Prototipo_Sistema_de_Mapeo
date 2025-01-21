@@ -31,56 +31,34 @@ $conexion->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa de Denuncias</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-mapadenuncias.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-    <style>
-        #mapa {
-            height: 100vh;
-            width: 70%;
-            float: left;
-        }
-        #detalle {
-            width: 30%;
-            height: 100vh;
-            float: right;
-            background-color: #f9f9f9;
-            border-left: 1px solid #ddd;
-            overflow-y: auto;
-            padding: 10px;
-        }
-    </style>
+
 </head>
 <body>
 <header>
-        <nav class="navbar">
+    <nav class="navbar">
             <div class="logo">
-                <a href="#">
-                    <img src="img/logo.png" alt="Logo" class="logo-img">
-                </a>
+                <a href="#"><img src="img/logo.png" alt="Logo" class="logo-img"></a>
             </div>
             <ul class="nav-links">
                 <li><a href="index.php">Inicio</a></li>
-                <li><a href="#mapa">Servicios</a></li>
-                <li><a href="#nosotros">Nosotros</a></li>
-                <li><a href="#contacto">Contacto</a></li>
+                <li><a href="mapaDenuncias.php">Mapa de denuncias</a></li>
+                <li><a href="contacto.php">Contacto</a></li>
+                <li><a href="#Comentarios">Comentarios</a></li>
             </ul>
             <div class="user-actions">
-                <input type="text" placeholder="Buscar..." class="search-box">
-                <button type="submit" class="search-button"></button>
-
-                <?php if ($usuario_nombre): ?>
-                    <div class="welcome-message">
+                <div class="nav-buttons">
+                    <?php if ($usuario_nombre): ?>
                         <p>Bienvenido, <?php echo $usuario_nombre; ?>!</p>
-                    </div>
-                    <a href="mostrarUsuario.php?id=<?php echo $usuario_id; ?>">
-                        <img src="img/tuerca.png" alt="Ajustes" class="settings-icon">
-                    </a>
-                <?php else: ?>
-                    <button onclick="window.location.href='crearCuenta.php'" class="btn-crear-cuenta">Crear usuario</button>
-                    <button onclick="window.location.href='iniciarSesion.php'" class="btn-iniciar-sesion">Iniciar sesión</button>
-                <?php endif; ?>
-
-
+                        <a href="mostrarUsuario.php?id=<?php echo $usuario_id; ?>">
+                            <img src="img/tuerca.png" alt="Ajustes" class="settings-icon">
+                        </a>
+                    <?php else: ?>
+                        <button onclick="window.location.href='crearCuenta.php'" class="btn-crear-cuenta">Crear usuario</button>
+                        <button onclick="window.location.href='iniciarSesion.php'" class="btn-iniciar-sesion">Iniciar sesión</button>
+                    <?php endif; ?>
+                </div>
             </div>
         </nav>
     </header>

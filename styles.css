@@ -6,142 +6,204 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #e9ffe8;
-    color: #339653;
+    background-color: #f4f4f4;
+    color: #333;
     line-height: 1.6;
 }
 
+/* Navbar */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #bafb94;
+    background-color: #aaf683;;
     padding: 1rem 2rem;
 }
 
-.logo img {
-    width: 150px; /* Ajusta el tamaño de la imagen del logo */
-    height: auto;
+.navbar .logo img {
+    width: 120px;
 }
 
 .nav-links {
+    list-style: none;
     display: flex;
-    list-style-type: none;
-    justify-content: center; /* Centra los enlaces */
-    flex: 1; /* Permite que los enlaces ocupen espacio adicional */
-}
-
-.nav-links li {
-    margin: 0 1rem;
+    gap: 1.5rem;
 }
 
 .nav-links a {
-    color: #339653;
+    color: #fff;
     text-decoration: none;
     font-size: 1.1rem;
-    transition: color 0.3s ease;
+    transition: color 0.3s;
 }
 
 .nav-links a:hover {
-    color: #f4a261;
+    color: #ffd97d;
 }
 
-.user-actions{
-    display: flex;
-    align-items: center;
-}
-
-.user-actions .search-box {
-    padding: 0.5rem;
-    border: 1px solid #339653;
+/* Estilos para los botones de "Crear usuario" e "Iniciar sesión" */
+.nav-buttons .btn-crear-cuenta,
+.nav-buttons .btn-iniciar-sesion {
+    background-color: #ff9b85; /* Color base */
+    color: white;
+    border: none;
     border-radius: 5px;
-    margin-right: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Pequeño efecto de sombra */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
 }
 
-.user-actions .user-icon,
-.user-actions .settings-icon {
+/* Hover: Cambia el color y efecto */
+.nav-buttons .btn-crear-cuenta:hover,
+.nav-buttons .btn-iniciar-sesion:hover {
+    background-color: #e76f51; /* Color más oscuro */
+    transform: scale(1.05); /* Crecimiento */
+}
+
+/* Active: Simula una presión del botón */
+.nav-buttons .btn-crear-cuenta:active,
+.nav-buttons .btn-iniciar-sesion:active {
+    transform: scale(0.95); /* Reduce ligeramente el tamaño */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reducción de sombra */
+}
+
+
+.user-actions {
+    display: flex;
+    gap: 1rem;
+    
+}
+
+.user-actions img {
     width: 30px;
-    height: 30px;
-    margin-left: 0.5rem;
     border-radius: 50%;
-    border: 2px solid #339653;
-    object-fit: cover;
+    cursor: pointer;
 }
 
+/* Hero Section */
+/* Hero Section */
 .hero {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 3rem 2rem;
-    background-color: #bafb94;
+    justify-content: space-between;
+    padding: 2rem;
+    background-color: #f4f4f4;
 }
 
-.hero-left {
+.hero .hero-text {
     flex: 1;
-    padding: 1rem;
+    margin-right: 2rem;
+    text-align: left;
 }
 
-.hero-left h1 {
+.hero h1 {
     font-size: 2.5rem;
+    color: #1d3557;
     margin-bottom: 1rem;
-    color: #2c3e50;
 }
 
+.hero .value-proposition {
+    font-size: 1.2rem;
+    color: #457b9d;
+    margin-bottom: 1.5rem;
+}
 
-.cta-button {
-    background-color: #339653;
-    color: #fff;
-    padding: 0.75rem 1.5rem;
+.hero .cta-button {
+    background-color: #ff9b85;
+    color: white;
+    padding: 0.8rem 1.5rem;
     border: none;
     border-radius: 5px;
     font-size: 1.2rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    text-decoration: none;
 }
 
-.cta-button:hover {
-    background-color: #286940;
+.hero .cta-button:hover {
+    background-color: #e76f51;
 }
 
-.map-section {
+.hero .hero-media {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.hero .hero-media img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Services Section */
+.services-section {
     text-align: center;
-    padding: 2rem 1rem;
+    padding: 2rem;
+    background-color: #f7f7f7; /* Color de fondo opcional */
 }
 
-.map-container {
-    margin: 1rem auto;
-    width: 80%;
-    max-width: 600px;
+.services-section h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 2rem;
 }
 
-.map-img {
-    width: 100%;
+/* Estilo para el grid */
+.services-grid {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+/* Tarjetas individuales */
+.service-card {
+    background-color: white;
     border-radius: 10px;
-    border: 2px solid #339653;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    width: 300px; /* Tamaño uniforme de las tarjetas */
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.map-search {
-    margin-top: 1rem;
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
 }
 
-.map-search-box {
-    padding: 0.5rem;
-    width: 60%;
-    max-width: 400px;
-    border: 1px solid #339653;
+/* Estilo para las imágenes */
+.service-card img {
+    width: 100%; /* Imagen llena el ancho del contenedor */
+    height: 150px; /* Altura fija */
+    object-fit: cover; /* Asegura que las imágenes se ajusten sin deformarse */
     border-radius: 5px;
+    margin-bottom: 1rem;
 }
 
-@media screen and (max-width: 768px) {
-    .nav-links {
-        display: none;
-    }
+/* Títulos dentro de las tarjetas */
+.service-card h3 {
+    font-size: 1.5rem;
+    color: #444;
+    margin-bottom: 0.5rem;
+}
 
-    .menu-toggle {
-        display: block;
-    }
+/* Descripciones dentro de las tarjetas */
+.service-card p {
+    font-size: 1rem;
+    color: #666;
+}
 
-    .hero h1 {
-        font-size: 2rem;
-    }
+/* Footer */
+footer {
+    background-color:#aaf683;;
+    color: #fff;
+    text-align: center;
+    padding: 1.5rem 0;
 }

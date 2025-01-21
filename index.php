@@ -18,55 +18,75 @@
     <header>
         <nav class="navbar">
             <div class="logo">
-                <a href="#">
-                    <img src="img/logo.png" alt="Logo" class="logo-img">
-                </a>
+                <a href="#"><img src="img/logo.png" alt="Logo" class="logo-img"></a>
             </div>
             <ul class="nav-links">
                 <li><a href="#inicio">Inicio</a></li>
-                <li><a href="mapaDenuncias.php">Servicios</a></li>
-                <li><a href="#nosotros">Nosotros</a></li>
-                <li><a href="#contacto">Contacto</a></li>
+                <li><a href="mapaDenuncias.php">Mapa de denuncias</a></li>
+                <li><a href="contacto.php">Contacto</a></li>
+                <li><a href="#Comentarios">Comentarios</a></li>
             </ul>
             <div class="user-actions">
-                <input type="text" placeholder="Buscar..." class="search-box">
-                <button type="submit" class="search-button"></button>
-
-                <?php if ($usuario_nombre): ?>
-                    <div class="welcome-message">
+                <div class="nav-buttons">
+                    <?php if ($usuario_nombre): ?>
                         <p>Bienvenido, <?php echo $usuario_nombre; ?>!</p>
-                    </div>
-                    <a href="mostrarUsuario.php?id=<?php echo $usuario_id; ?>">
-                        <img src="img/tuerca.png" alt="Ajustes" class="settings-icon">
-                    </a>
-                <?php else: ?>
-                    <button onclick="window.location.href='crearCuenta.php'" class="btn-crear-cuenta">Crear usuario</button>
-                    <button onclick="window.location.href='iniciarSesion.php'" class="btn-iniciar-sesion">Iniciar sesión</button>
-                <?php endif; ?>
-
-
+                        <a href="mostrarUsuario.php?id=<?php echo $usuario_id; ?>">
+                            <img src="img/tuerca.png" alt="Ajustes" class="settings-icon">
+                        </a>
+                    <?php else: ?>
+                        <button onclick="window.location.href='crearCuenta.php'" class="btn-crear-cuenta">Crear usuario</button>
+                        <button onclick="window.location.href='iniciarSesion.php'" class="btn-iniciar-sesion">Iniciar sesión</button>
+                    <?php endif; ?>
+                </div>
             </div>
         </nav>
     </header>
 
     <main>
+        <!-- Hero Section -->
         <section class="hero">
-            <h1>Nosotros vamos de k’uchu a k’uchu</h1>
-            <a href="registroDenuncia.php?id=<?php echo $usuario_id; ?>">
-                <button type="submit" class="cta-button">Comienza ahora</button>
-            </a>
-
+             <div class="hero-text">
+                <h1>Nosotros vamos de k'uchu a k'uchu</h1>
+                <p class="value-proposition">Tu ciudad más limpia, tu vida más feliz</p>
+                <?php if ($usuario_id): ?>
+                <a href="registroDenuncia.php?id=<?php echo $usuario_id; ?>" class="cta-button">Comienza ahora</a>
+                    <?php else: ?>
+                <a href="iniciarSesion.php" class="cta-button">Comienza ahora</a>
+                     <?php endif; ?>
+             </div>
+            <div class="hero-media">
+                <img src="img/fotosacadadeinsta-diegoparedes.png" alt="Imagen destacada">
+             </div>
         </section>
 
-        <section class="map-section">
-            <h2>Mapeo de basura</h2>
-            <div class="map-container">
-                <img src="img/mapa-img.jpeg" alt="Mapa de basura" class="map-img">
-            </div>
-            <div class="map-search">
-                <input type="text" placeholder="Buscar ubicación..." class="map-search-box">
+        <!-- Services Section -->
+        <section class="services-section">
+            <h2>¿EN QUÉ PODEMOS AYUDAR AL USUARIO?</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>Mapa iteractivo</h3>
+                    <img src="img/map.gif" alt="">
+                    <p>Descripción del servicio 1</p>
+                </div>
+                <div class="service-card">
+                    <h3>Reportes</h3>
+                    <img src="img/den.gif" alt="">
+                    <p>Descripción del servicio 2</p>
+                </div>
+                <div class="service-card">
+                    <h3>Contacto</h3>
+                    <img src="img/llam.gif" alt="">
+                    <p>Descripción del servicio 3</p>
+                </div>
             </div>
         </section>
     </main>
+
+    <footer>
+        <div class="footer-content">
+            <img src="img/logo.png" alt="Logo" class="logo-footer">
+            <p>Información de contacto y derechos reservados</p>
+        </div>
+    </footer>
 </body>
 </html>
