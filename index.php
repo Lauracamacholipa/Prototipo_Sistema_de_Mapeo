@@ -2,9 +2,9 @@
     // Iniciar la sesión
     session_start();
     // Verificar si el usuario está logueado
-    $usuario_id = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : null;
+    $usuario_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
     $usuario_nombre = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : null;
-
+    $usuario_rol = isset($_SESSION['rol']) ? $_SESSION['rol'] : null;
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -22,7 +22,7 @@
             </div>
             <ul class="nav-links">
                 <li><a href="#inicio">Inicio</a></li>
-                <li><a href="mapaDenuncias.php">Mapa de denuncias</a></li>
+                <li><a href="mapaDenuncias.php?rol=<?php echo urlencode($usuario_rol); ?>">Mapa de denuncias</a></li>
                 <li><a href="contacto.php">Contacto</a></li>
                 <li><a href="#Comentarios">Comentarios</a></li>
             </ul>
@@ -34,7 +34,7 @@
                             <img src="img/tuerca.png" alt="Ajustes" class="settings-icon">
                         </a>
                     <?php else: ?>
-                        <button onclick="window.location.href='crearCuenta.php'" class="btn-crear-cuenta">Crear usuario</button>
+                        <button type="button" onclick="window.location.href='crearCuenta.php'" class="btn-crear-cuenta">Crear usuario</button>
                         <button onclick="window.location.href='iniciarSesion.php'" class="btn-iniciar-sesion">Iniciar sesión</button>
                     <?php endif; ?>
                 </div>
@@ -45,18 +45,18 @@
     <main>
         <!-- Hero Section -->
         <section class="hero">
-             <div class="hero-text">
+            <div class="hero-text">
                 <h1>Nosotros vamos de k'uchu a k'uchu</h1>
                 <p class="value-proposition">Tu ciudad más limpia, tu vida más feliz</p>
                 <?php if ($usuario_id): ?>
-                <a href="registroDenuncia.php?id=<?php echo $usuario_id; ?>" class="cta-button">Comienza ahora</a>
-                    <?php else: ?>
-                <a href="iniciarSesion.php" class="cta-button">Comienza ahora</a>
-                     <?php endif; ?>
-             </div>
+                    <a href="registroDenuncia.php?id=<?php echo $usuario_id; ?>" class="cta-button">Comienza ahora</a>
+                <?php else: ?>
+                    <a href="iniciarSesion.php" class="cta-button">Comienza ahora</a>
+                <?php endif; ?>
+            </div>
             <div class="hero-media">
                 <img src="img/fotosacadadeinsta-diegoparedes.png" alt="Imagen destacada">
-             </div>
+            </div>
         </section>
 
         <!-- Services Section -->
@@ -64,7 +64,7 @@
             <h2>¿EN QUÉ PODEMOS AYUDAR AL USUARIO?</h2>
             <div class="services-grid">
                 <div class="service-card">
-                    <h3>Mapa iteractivo</h3>
+                    <h3>Mapa interactivo</h3>
                     <img src="img/map.gif" alt="">
                     <p>Descripción del servicio 1</p>
                 </div>

@@ -29,6 +29,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $estado = 'pendiente';
     $fecha_denuncia = date("Y-m-d"); // Fecha actual
 
+    // Verificar si la ubicación está dentro de los límites de Cochabamba
+    list($lat, $lng) = explode(',', $ubicacion);
+    $lat = trim($lat);
+    $lng = trim($lng);
+
+    // Verificar la ubicación usando el GeoJSON cargado en el mapa
+    if (!isInsideArea($lat, $lng)) {
+        echo "La ubicación seleccionada no está dentro de los límites del municipio de Cochabamba.";
+        exit();
+    }
+
     // Manejo de la evidencia (imagen)
     $evidencia = null;
     if (!empty($_FILES['imagen']['name'])) {
@@ -46,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Insertar datos en la base de datos
-    $query = "INSERT INTO denuncia (id_usuario, titulo, descripción, fecha_denuncia, estado, categoria, ubicacion, evidencia)
+    $query = "INSERT INTO denuncia (id_usuario, titulo, descripcion, fecha_denuncia, estado, categoria, ubicacion, evidencia)
               VALUES ('$usuario_id', '$titulo', '$descripcion', '$fecha_denuncia', '$estado', '$categoria', '$ubicacion', '$evidencia')";
 
     if ($conexion->query($query)) {
@@ -135,30 +146,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
-        // Crear el mapa
-        const map = L.map('mi_mapa').setView([-17.3935, -66.157], 14);
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+    // Crear el mapa
+    const map = L.map('mi_mapa').setView([-17.3935, -66.157], 14);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
 
-        let selectedMarker; // Marcador seleccionado
+    let limitesCochabamba; // Variable para los límites desde el archivo GeoJSON
 
-        // Agregar marcador en el clic del mapa
-        map.on('click', (event) => {
-            const { lat, lng } = event.latlng;
+    // Cargar los límites desde el archivo GeoJSON
+    fetch('export.geojson') // Reemplaza con la ruta correcta a tu archivo
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("No se pudo cargar el archivo GeoJSON.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            limitesCochabamba = L.geoJSON(data, {
+                style: {
+                    color: '#ff7800', // Color de los límites
+                    weight: 2, // Grosor de la línea
+                    fillColor: '#fffcf5', // Color de relleno
+                    fillOpacity: 0.4 // Opacidad del relleno
+                }
+            }).addTo(map);
 
-            // Remover marcador anterior
+            map.fitBounds(limitesCochabamba.getBounds()); // Ajustar el mapa a los límites del área
+        })
+        .catch(error => console.error("Error al cargar el GeoJSON:", error));
+
+    let selectedMarker; // Marcador seleccionado
+
+    // Función para verificar si la ubicación está dentro del área utilizando el GeoJSON
+    function isInsideArea(lat, lng) {
+        if (!limitesCochabamba) return false;
+        const point = L.latLng(lat, lng);
+        return limitesCochabamba.getLayers().some(layer => layer.getBounds().contains(point));
+    }
+
+    // Evento click en el mapa
+    map.on('click', (event) => {
+        const { lat, lng } = event.latlng;
+
+        if (isInsideArea(lat, lng)) {
+            // Eliminar marcador anterior si existe
             if (selectedMarker) {
                 map.removeLayer(selectedMarker);
             }
 
-            // Agregar nuevo marcador
-            selectedMarker = L.marker([lat, lng]).addTo(map)
-                .bindPopup('Ubicación seleccionada').openPopup();
+            // Crear nuevo marcador y permitir arrastrarlo
+            selectedMarker = L.marker([lat, lng], { draggable: true }).addTo(map)
+                .bindPopup('Ubicación seleccionada dentro de Cochabamba').openPopup();
 
             // Actualizar campo de texto con las coordenadas
             document.getElementById('ubicacion').value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-        });
+
+            // Evento al arrastrar el marcador
+            selectedMarker.on('dragend', (e) => {
+                const { lat: newLat, lng: newLng } = e.target.getLatLng();
+                if (isInsideArea(newLat, newLng)) {
+                    // Actualizar coordenadas en el campo de texto
+                    document.getElementById('ubicacion').value = `${newLat.toFixed(6)}, ${newLng.toFixed(6)}`;
+                }
+            });
+        } else {
+            alert("La ubicación seleccionada no está dentro de los límites del municipio de Cochabamba.");
+        }
+    });
     </script>
 </body>
 </html>
