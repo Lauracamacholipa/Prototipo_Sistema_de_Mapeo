@@ -69,19 +69,6 @@ mysqli_close($enlace);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Cuenta</title>
     <link rel="stylesheet" href="styles-crearcuenta.css">
-    <style>
-        .mensaje-error {
-            color: red;
-            background-color: #ffe6e6;
-            padding: 10px;
-            border: 1px solid red;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-        #admin-password-field {
-            display: none;
-        }
-    </style>
     <script>
         // Muestra el campo de contraseña de administrador si se selecciona "Administrador"
         function toggleAdminPasswordField() {
@@ -105,7 +92,6 @@ mysqli_close($enlace);
             <li><a href="index.php">Inicio</a></li>
             <li><a href="mapaDenuncias.php">Mapa de denuncias</a></li>
             <li><a href="contacto.php">Contacto</a></li>
-            <li><a href="#Comentarios">Comentarios</a></li>
         </ul>
     </nav>
 </header>

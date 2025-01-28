@@ -11,6 +11,7 @@ if (!isset($_SESSION['id'])) {
 
 // Obtener el usuario_id desde la sesión
 $usuario_id = $_SESSION['id'];
+$usuario_nombre = isset($_SESSION['usuario_nombre']) ? $_SESSION['usuario_nombre'] : null;
 
 // Verificar si se ha enviado el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -79,22 +80,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Denuncia</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="stylesRegistrodenuncias.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-    <style>
-        #mi_mapa {
-            height: 400px;
-            width: 100%;
-            margin-top: 10px;
-        }
-        .readonly {
-            background-color: #f5f5f5;
-            border: none;
-            pointer-events: none;
-        }
-    </style>
+
 </head>
 <body>
+<header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="#"><img src="img/logo.png" alt="Logo" class="logo-img"></a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.php">Inicio</a></li>
+                <li><a href="mapaDenuncias.php">Mapa de Denuncias</a></li>
+                <li><a href="contacto.php">Contacto</a></li>
+            </ul>
+            <div class="user-actions">
+                <div class="nav-buttons">
+                    <?php if ($usuario_nombre): ?>
+                        <p>Bienvenido, <?php echo htmlspecialchars($usuario_nombre); ?>!</p>
+                        <a href="mostrarUsuario.php?id=<?php echo htmlspecialchars($usuario_id); ?>">
+                            <img src="img/tuerca.png" alt="Ajustes" class="settings-icon">
+                        </a>
+                    <?php else: ?>
+                        <button onclick="window.location.href='crearCuenta.php'" class="btn-crear-cuenta">Crear Usuario</button>
+                        <button onclick="window.location.href='iniciarSesion.php'" class="btn-iniciar-sesion">Iniciar Sesión</button>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </nav>
+    </header>
     <main>
         <section>
             <h2>Registrar Denuncia</h2>

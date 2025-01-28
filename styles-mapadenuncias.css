@@ -32,11 +32,12 @@ body {
     justify-content: space-between;
     align-items: center;
     background-color: #aaf683;;
-    padding: 1rem 2rem;
+    padding: 0.2rem 0.5rem;
+    height: 50px;
 }
 
 .navbar .logo img {
-    width: 120px;
+    width: 60px;
 }
 
 .nav-links {
@@ -49,7 +50,6 @@ body {
     color: #fff;
     text-decoration: none;
     font-size: 1.1rem;
-    transition: color 0.3s;
 }
 
 .nav-links a:hover {
@@ -86,6 +86,18 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reducción de sombra */
 }
 
+
+.user-actions {
+    display: flex;
+    gap: 1rem;
+    
+}
+
+.user-actions img {
+    width: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+}
 
 .detalle-container {
     padding: 1rem;

@@ -77,7 +77,6 @@ $conexion->close();
             <li><a href="index.php">Inicio</a></li>
             <li><a href="mapaDenuncias.php">Mapa de Denuncias</a></li>
             <li><a href="contacto.php">Contacto</a></li>
-            <li><a href="#Comentarios">Comentarios</a></li>
         </ul>
         <div class="user-actions">
             <div class="nav-buttons">
@@ -94,6 +93,7 @@ $conexion->close();
         </div>
     </nav>
 </header>
+
 
 <div id="mapa"></div>
 <div id="detalle">

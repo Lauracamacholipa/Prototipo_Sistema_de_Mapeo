@@ -79,7 +79,6 @@ if (isset($_SESSION['id'])) {
                 <li><a href="index.php">Inicio</a></li>
                 <li><a href="mapaDenuncias.php">Mapa de denuncias</a></li>
                 <li><a href="contacto.php">Contacto</a></li>
-                <li><a href="#Comentarios">Comentarios</a></li>
             </ul>
             <div class="user-actions">
                 <div class="nav-buttons">
@@ -113,4 +112,3 @@ if (isset($_SESSION['id'])) {
     </main>
 </body>
 </html>
-

@@ -62,25 +62,24 @@ mysqli_close($enlace);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de Usuario</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="stylesMostrarUsuario.css">
 </head>
 <body>
-    <header>
+    <div class="container">
         <h1>Perfil de Usuario</h1>
-    </header>
-    <main>
-        <section>
-            <h2>Información Personal</h2>
+        <h2>Información Personal</h2>
+
+        <div class="info">
             <p><strong>Nombre:</strong> <?php echo $nombre; ?></p>
             <p><strong>Email:</strong> <?php echo $email; ?></p>
             <p><strong>Teléfono:</strong> <?php echo $telefono; ?></p>
-        </section>
+        </div>
+
         <a href="index.php">Volver al Inicio</a>
         <!-- Botón de Cerrar Sesión -->
         <form action="" method="POST">
             <button type="submit" name="cerrar_sesion">Cerrar sesión</button>
         </form>
-
         <?php
         // Verificar si se presionó el botón de cerrar sesión
         if (isset($_POST['cerrar_sesion'])) {
@@ -93,6 +92,6 @@ mysqli_close($enlace);
             exit();
         }
         ?>
-    </main>
+    </div>
 </body>
 </html>

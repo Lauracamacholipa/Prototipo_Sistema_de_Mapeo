@@ -24,7 +24,6 @@
                 <li><a href="#inicio">Inicio</a></li>
                 <li><a href="mapaDenuncias.php?rol=<?php echo urlencode($usuario_rol); ?>">Mapa de denuncias</a></li>
                 <li><a href="contacto.php">Contacto</a></li>
-                <li><a href="#Comentarios">Comentarios</a></li>
             </ul>
             <div class="user-actions">
                 <div class="nav-buttons">
