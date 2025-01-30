@@ -32,6 +32,9 @@ if (isset($_SESSION['id'])) {
         die("Conexión fallida: " . mysqli_connect_error());
     }
 
+    // Variable para almacenar el mensaje de error
+    $mensaje_error = "";
+
     // Verifica si se ha enviado el formulario
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $email = $_POST['email'];
@@ -53,7 +56,7 @@ if (isset($_SESSION['id'])) {
             exit();
         } else {
             // Usuario o contraseña incorrecta
-            echo "<p>Correo electrónico o contraseña incorrectos.</p>";
+            $mensaje_error = "Correo electrónico o contraseña incorrectos.";
         }
     }
 
@@ -70,35 +73,16 @@ if (isset($_SESSION['id'])) {
     <link rel="stylesheet" href="styles-iniciarsesion.css">
 </head>
 <body>
-    <header>
-    <nav class="navbar">
-            <div class="logo">
-                <a href="#"><img src="img/logo.png" alt="Logo" class="logo-img"></a>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.php">Inicio</a></li>
-                <li><a href="mapaDenuncias.php">Mapa de denuncias</a></li>
-                <li><a href="contacto.php">Contacto</a></li>
-            </ul>
-            <div class="user-actions">
-                <div class="nav-buttons">
-                    <?php if ($usuario_nombre): ?>
-                        <p>Bienvenido, <?php echo $usuario_nombre; ?>!</p>
-                        <a href="mostrarUsuario.php?id=<?php echo $usuario_id; ?>">
-                            <img src="img/tuerca.png" alt="Ajustes" class="settings-icon">
-                        </a>
-                    <?php else: ?>
-                        <button onclick="window.location.href='crearCuenta.php'" class="btn-crear-cuenta">Crear usuario</button>
-                        <button onclick="window.location.href='iniciarSesion.php'" class="btn-iniciar-sesion">Iniciar sesión</button>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </nav>
-    </header>
 
     <main>
         <section class="login-form">
             <h1>Iniciar sesión</h1>
+
+             <!-- Mostrar el mensaje de error si existe -->
+             <?php if (!empty($mensaje_error)): ?>
+                <div class="mensaje-error"><?php echo $mensaje_error; ?></div>
+            <?php endif; ?>
+
             <form action="iniciarSesion.php" method="POST">
                 <label for="email">Correo electrónico:</label>
                 <input type="email" id="email" name="email" required>
@@ -106,7 +90,11 @@ if (isset($_SESSION['id'])) {
                 <label for="contrasena">Contraseña:</label>
                 <input type="password" id="contrasena" name="contrasena" required>
 
-                <button type="submit" class="btn-iniciar-sesion">Iniciar sesión</button>
+                <!--<button type="submit" class="btn-iniciar-sesion">Iniciar sesión</button>-->
+                <div class="button-group">
+                    <button type="submit" class="btn-iniciar-sesion">Iniciar sesión</button>
+                    <button type="button" class="btn-volver" onclick="window.location.href='index.php'">Volver</button>
+                </div>
             </form>
         </section>
     </main>

@@ -1,59 +1,46 @@
 <?php
-session_start();  // Iniciar sesión para verificar si el usuario está autenticado
+    session_start();  
 
-// Verificar si el usuario está logueado
-if (!isset($_SESSION['id'])) {
-    // Redirigir si no está logueado
-    header("Location: iniciarSesion.php");
-    exit();
-}
-
-// Obtener el ID desde la URL
-$id_usuario = isset($_GET['id']) && ctype_digit($_GET['id']) ? (int)$_GET['id'] : (int)$_SESSION['id'];
-
-// Configuración de la base de datos
-$host = 'localhost';
-$dbname = 'denuncias';
-$username = 'root';
-$password = '';
-
-// Conexión a la base de datos
-$enlace = mysqli_connect($host, $username, $password, $dbname);
-
-// Verifica si la conexión fue exitosa
-if (!$enlace) {
-    die("Conexión fallida: " . mysqli_connect_error());
-}
-
-// Consulta para obtener la información del usuario
-$stmt = $enlace->prepare("SELECT nombre, email, telefono FROM usuario WHERE id = ?");
-if ($stmt) {
-    // Vincular el parámetro de la consulta (el id del usuario)
-    $stmt->bind_param("i", $id_usuario);
-    // Ejecutar la consulta
-    $stmt->execute();
-    // Obtener el resultado de la consulta
-    $result = $stmt->get_result();
-
-    // Verificar si el usuario existe
-    if ($row = $result->fetch_assoc()) {
-        $nombre = htmlspecialchars($row['nombre']);  // Escapar salida para evitar XSS
-        $email = htmlspecialchars($row['email']);
-        $telefono = htmlspecialchars($row['telefono']);
-    } else {
-        echo "Usuario no encontrado.";
+    if (!isset($_SESSION['id'])) {
+        header("Location: iniciarSesion.php");
         exit();
     }
 
-    // Cerrar la declaración
-    $stmt->close();
-} else {
-    echo "Error en la preparación de la consulta.";
-    exit();
-}
+    $id_usuario = isset($_GET['id']) && ctype_digit($_GET['id']) ? (int)$_GET['id'] : (int)$_SESSION['id'];
 
-// Cerrar la conexión a la base de datos
-mysqli_close($enlace);
+    $host = 'localhost';
+    $dbname = 'denuncias';
+    $username = 'root';
+    $password = '';
+
+    $enlace = mysqli_connect($host, $username, $password, $dbname);
+
+    if (!$enlace) {
+        die("Conexión fallida: " . mysqli_connect_error());
+    }
+
+    $stmt = $enlace->prepare("SELECT nombre, email, telefono FROM usuario WHERE id = ?");
+    if ($stmt) {
+        $stmt->bind_param("i", $id_usuario);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($row = $result->fetch_assoc()) {
+            $nombre = htmlspecialchars($row['nombre']);  
+            $email = htmlspecialchars($row['email']);
+            $telefono = htmlspecialchars($row['telefono']);
+        } else {
+            echo "Usuario no encontrado.";
+            exit();
+        }
+
+        $stmt->close();
+    } else {
+        echo "Error en la preparación de la consulta.";
+        exit();
+    }
+
+    mysqli_close($enlace);
 ?>
 
 <!DOCTYPE html>
@@ -75,22 +62,21 @@ mysqli_close($enlace);
             <p><strong>Teléfono:</strong> <?php echo $telefono; ?></p>
         </div>
 
-        <a href="index.php">Volver al Inicio</a>
-        <!-- Botón de Cerrar Sesión -->
-        <form action="" method="POST">
-            <button type="submit" name="cerrar_sesion">Cerrar sesión</button>
-        </form>
-        <?php
-        // Verificar si se presionó el botón de cerrar sesión
-        if (isset($_POST['cerrar_sesion'])) {
-            // Destruir todas las variables de sesión
-            session_unset();
-            session_destroy();
+        <div class="buttons-container">
+            <a href="index.php" class="cta-button">Volver al Inicio</a>
+            <form action="" method="POST">
+                <button type="submit" name="cerrar_sesion" class="cta-button cta-button-logout">Cerrar sesión</button>
+            </form>
+        </div>
 
-            // Redirigir al inicio (index.php)
-            header("Location: index.php");
-            exit();
-        }
+        <?php
+            if (isset($_POST['cerrar_sesion'])) {
+                session_unset();
+                session_destroy();
+
+                header("Location: index.php");
+                exit();
+            }
         ?>
     </div>
 </body>

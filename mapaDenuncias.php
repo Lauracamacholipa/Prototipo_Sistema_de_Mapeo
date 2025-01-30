@@ -13,17 +13,40 @@ if ($conexion->connect_error) {
     die("Error en la conexión a la base de datos: " . $conexion->connect_error);
 }
 
+$estado_filtrado = $_GET['estado'] ?? null;
+$usuario_filtrado = $_GET['mis_denuncias'] ?? null;
+
 // Obtener todas las denuncias de la base de datos
 $query = "SELECT d.id_denuncia, d.titulo, d.descripción, d.ubicacion, d.categoria, d.estado, d.evidencia, d.fecha_denuncia, 
-                 u.nombre AS usuario_nombre, u.email AS usuario_email, u.telefono AS usuario_telefono 
+          u.id AS usuario_id, u.nombre AS usuario_nombre, u.email AS usuario_email, u.telefono AS usuario_telefono 
           FROM denuncia d 
           JOIN usuario u ON d.id_usuario = u.id";
+
+// Filtrar por estado
+if ($estado_filtrado && in_array($estado_filtrado, ['pendiente', 'en_proceso', 'resuelta', 'rechazada'])) {
+    $query .= " WHERE d.estado = '$estado_filtrado'";
+}
+
+// Filtrar por denuncias del usuario logueado
+if ($usuario_filtrado) {
+    if ($estado_filtrado) {
+        $query .= " AND d.id_usuario = $usuario_id";
+    } else {
+        $query .= " WHERE d.id_usuario = $usuario_id";
+    }
+}
 
 $resultado = $conexion->query($query);
 
 $denuncias = [];
 if ($resultado && $resultado->num_rows > 0) {
     while ($fila = $resultado->fetch_assoc()) {
+        // Asegúrate de que el campo de evidencia tenga la ruta correcta
+        if ($fila['evidencia']) {
+            $fila['evidencia'] = 'uploads/' . $fila['evidencia'];
+        }
+
+        // Agregar la denuncia al arreglo
         $denuncias[] = $fila;
     }
 }
@@ -57,7 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_denuncia'], $_POST
 $conexion->close();
 ?>
 
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -68,37 +90,63 @@ $conexion->close();
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 </head>
 <body>
-<header>
-    <nav class="navbar">
-        <div class="logo">
-            <a href="#"><img src="img/logo.png" alt="Logo" class="logo-img"></a>
-        </div>
-        <ul class="nav-links">
-            <li><a href="index.php">Inicio</a></li>
-            <li><a href="mapaDenuncias.php">Mapa de Denuncias</a></li>
-            <li><a href="contacto.php">Contacto</a></li>
-        </ul>
-        <div class="user-actions">
-            <div class="nav-buttons">
-                <?php if ($usuario_nombre): ?>
-                    <p>Bienvenido, <?php echo $usuario_nombre; ?>!</p>
-                    <a href="mostrarUsuario.php?id=<?php echo $usuario_id; ?>">
-                        <img src="img/tuerca.png" alt="Ajustes" class="settings-icon">
-                    </a>
-                <?php else: ?>
-                    <button onclick="window.location.href='crearCuenta.php'" class="btn-crear-cuenta">Crear Usuario</button>
-                    <button onclick="window.location.href='iniciarSesion.php'" class="btn-iniciar-sesion">Iniciar Sesión</button>
-                <?php endif; ?>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="#"><img src="img/logo.png" alt="Logo" class="logo-img"></a>
             </div>
+            <ul class="nav-links">
+                <li><a href="index.php">Inicio</a></li>
+                <li><a href="#mapaDenuncias">Mapa de Denuncias</a></li>
+                <li><a href="contacto.php">Contacto</a></li>
+            </ul>
+            <div class="user-actions">
+                <div class="nav-buttons">
+                    <?php if ($usuario_nombre): ?>
+                        <p>Bienvenido, <?php echo $usuario_nombre; ?>!</p>
+                        <a href="mostrarUsuario.php?id=<?php echo $usuario_id; ?>">
+                            <img src="img/tuerca.png" alt="Ajustes" class="settings-icon">
+                        </a>
+                    <?php else: ?>
+                        <button type="button" onclick="window.location.href='crearCuenta.php'" class="btn-crear-cuenta">Crear usuario</button>
+                        <button onclick="window.location.href='iniciarSesion.php'" class="btn-iniciar-sesion">Iniciar sesión</button>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+<div class="contenedor-principal">
+    <div class="contenedor-mapa">
+        <div id="mapa">Mapa aquí</div>
+    </div>
+    <div class="contenedor-detalle">
+        <div class="filters">
+            <form method="GET" action="mapaDenuncias.php">
+                <div>
+                    <label for="estado">Filtrar por estado:</label>
+                    <select name="estado" id="estado">
+                        <option value="">Todas</option>
+                        <option value="pendiente" <?php echo $estado_filtrado === 'pendiente' ? 'selected' : ''; ?>>Pendiente</option>
+                        <option value="en_proceso" <?php echo $estado_filtrado === 'en_proceso' ? 'selected' : ''; ?>>En Proceso</option>
+                        <option value="resuelta" <?php echo $estado_filtrado === 'resuelta' ? 'selected' : ''; ?>>Resuelta</option>
+                        <option value="rechazada" <?php echo $estado_filtrado === 'rechazada' ? 'selected' : ''; ?>>Rechazada</option>
+                    </select>
+                </div>
+
+                <?php if ($usuario_id): ?>
+                    <div>
+                        <label for="mis_denuncias">Mis Denuncias:</label>
+                        <input type="checkbox" name="mis_denuncias" value="1" <?php echo $usuario_filtrado ? 'checked' : ''; ?>>
+                    </div>
+                <?php endif; ?>
+
+                <button type="submit">Filtrar</button>
+            </form>
         </div>
-    </nav>
-</header>
 
-
-<div id="mapa"></div>
-<div id="detalle">
-    <h3>Detalles de la Denuncia</h3>
-    <p>Haz clic en una denuncia para ver más detalles aquí.</p>
+        <div id="detalle">Detalle de la denuncia aquí</div>
+    </div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -131,17 +179,49 @@ fetch('export.geojson')
 
 // Cargar denuncias desde PHP
 const denuncias = <?php echo json_encode($denuncias); ?>;
+const usuarioActual = <?php echo json_encode($usuario_id); ?>;
+const isAdmin = <?php echo $usuario_rol === 'admin' ? 'true' : 'false'; ?>;
 
-// Crear marcadores en el mapa
+// Definir colores para cada estado
+const estadoColores = {
+    pendiente: 'orange',
+    en_proceso: 'blue',
+    resuelta: 'green',
+    rechazada: 'red'
+};
+
+// Crear marcadores en el mapa con colores específicos
 denuncias.forEach(denuncia => {
     const ubicacionValida = denuncia.ubicacion && denuncia.ubicacion.includes(',');
 
     if (ubicacionValida) {
         const [lat, lng] = denuncia.ubicacion.split(',').map(coord => parseFloat(coord.trim()));
 
-        const marker = L.marker([lat, lng]).addTo(map);
+        // Obtener el color basado en el estado
+        const color = estadoColores[denuncia.estado] || 'blue'; // Por defecto, azul si no coincide
+
+        // Crear un ícono personalizado para el marcador
+        const iconoPersonalizado = L.divIcon({
+            className: 'custom-marker',
+            html: `<div style="background-color:${color}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white;"></div>`,
+            iconSize: [20, 20],
+            iconAnchor: [10, 10]
+        });
+
+        // Crear y agregar el marcador al mapa
+        const marker = L.marker([lat, lng], { icon: iconoPersonalizado }).addTo(map);
+
         marker.on('click', () => {
-            const isAdmin = <?php echo $usuario_rol === 'admin' ? 'true' : 'false'; ?>;
+
+            let botonEditar = '';
+            console.log("Usuario Actual:", usuarioActual);
+            console.log("ID Usuario Denuncia:", denuncia.usuario_id);
+
+
+            if (denuncia.usuario_id == usuarioActual) {
+                botonEditar = `<button class="boton-editar" onclick="window.location.href='editarDenuncia.php?id=${denuncia.id_denuncia}'">Editar</button>`;
+                console.log("Botón de editar generado:", botonEditar);
+            }
 
             document.getElementById('detalle').innerHTML = `
                 <div class="detalle-container">
@@ -165,7 +245,7 @@ denuncias.forEach(denuncia => {
                         <form class="estado-form" action="mapaDenuncias.php" method="POST">
                             <input type="hidden" name="id_denuncia" value="${denuncia.id_denuncia}">
                             <label for="estado">Actualizar Estado:</label>
-                            <select name="estado" id="estado" required>
+                            <select name="estado" id="estado-select" required>
                                 <option value="pendiente" ${denuncia.estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
                                 <option value="en_proceso" ${denuncia.estado === 'en_proceso' ? 'selected' : ''}>En Proceso</option>
                                 <option value="resuelta" ${denuncia.estado === 'resuelta' ? 'selected' : ''}>Resuelta</option>
@@ -176,6 +256,7 @@ denuncias.forEach(denuncia => {
                     ` : `
                         <p><strong>Usuario:</strong> ${denuncia.usuario_nombre}</p>
                     `}
+                    ${botonEditar ? botonEditar : ''}
                 </div>
             `;
         });

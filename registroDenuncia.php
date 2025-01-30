@@ -1,78 +1,100 @@
 <?php
-// Iniciar la sesión
 session_start();
 
-// Verificar si el usuario está logueado
 if (!isset($_SESSION['id'])) {
-    // Si el usuario no está logueado, redirigir al login
     header("Location: iniciarSesion.php");
     exit();
 }
 
-// Obtener el usuario_id desde la sesión
 $usuario_id = $_SESSION['id'];
 $usuario_nombre = isset($_SESSION['usuario_nombre']) ? $_SESSION['usuario_nombre'] : null;
 
-// Verificar si se ha enviado el formulario
+function isInsideArea($lat, $lng) {
+    $geojson = file_get_contents('export.geojson'); 
+    $data = json_decode($geojson, true);
+
+    foreach ($data['features'] as $feature) {
+        $polygon = $feature['geometry']['coordinates'][0]; 
+        if (pointInPolygon($lat, $lng, $polygon)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function pointInPolygon($lat, $lng, $polygon) {
+    $inside = false;
+    $x = $lng;
+    $y = $lat;
+
+    $n = count($polygon);
+    for ($i = 0, $j = $n - 1; $i < $n; $j = $i++) {
+        $xi = $polygon[$i][0];
+        $yi = $polygon[$i][1];
+        $xj = $polygon[$j][0];
+        $yj = $polygon[$j][1];
+
+        $intersect = (($yi > $y) != ($yj > $y)) && ($x < ($xj - $xi) * ($y - $yi) / ($yj - $yi) + $xi);
+        if ($intersect) $inside = !$inside;
+    }
+    return $inside;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Conexión a la base de datos
-    $conexion = new mysqli("localhost", "root", "", "denuncias"); // Ajusta los datos de conexión
+    $conexion = new mysqli("localhost", "root", "", "denuncias"); 
 
     if ($conexion->connect_error) {
         die("Error en la conexión a la base de datos: " . $conexion->connect_error);
     }
 
-    // Obtener datos del formulario
     $titulo = $conexion->real_escape_string($_POST['titulo']);
     $descripcion = $conexion->real_escape_string($_POST['descripcion']);
     $ubicacion = $conexion->real_escape_string($_POST['ubicacion']);
     $categoria = $conexion->real_escape_string($_POST['categoria']);
     $estado = 'pendiente';
-    $fecha_denuncia = date("Y-m-d"); // Fecha actual
+    $fecha_denuncia = date("Y-m-d");
 
-    // Verificar si la ubicación está dentro de los límites de Cochabamba
     list($lat, $lng) = explode(',', $ubicacion);
-    $lat = trim($lat);
-    $lng = trim($lng);
+    $lat = (float)trim($lat);
+    $lng = (float)trim($lng);
 
-    // Verificar la ubicación usando el GeoJSON cargado en el mapa
     if (!isInsideArea($lat, $lng)) {
         echo "La ubicación seleccionada no está dentro de los límites del municipio de Cochabamba.";
         exit();
     }
 
-    // Manejo de la evidencia (imagen)
     $evidencia = null;
     if (!empty($_FILES['imagen']['name'])) {
-        $target_dir = "uploads/"; // Carpeta donde se guardarán las imágenes
+        $target_dir = "uploads/"; 
         if (!file_exists($target_dir)) {
-            mkdir($target_dir, 0777, true); // Crear carpeta si no existe
+            mkdir($target_dir, 0777, true); 
         }
-        $target_file = $target_dir . basename($_FILES['imagen']['name']);
+
+        $filename = basename($_FILES['imagen']['name']);
+        $target_file = $target_dir . $filename;
+        
         if (move_uploaded_file($_FILES['imagen']['tmp_name'], $target_file)) {
-            $evidencia = $conexion->real_escape_string($target_file);
+            $evidencia = $conexion->real_escape_string($filename);
         } else {
             echo "Error al subir la imagen.";
             exit();
         }
     }
 
-    // Insertar datos en la base de datos
-    $query = "INSERT INTO denuncia (id_usuario, titulo, descripcion, fecha_denuncia, estado, categoria, ubicacion, evidencia)
+    $query = "INSERT INTO denuncia (id_usuario, titulo, descripción, fecha_denuncia, estado, categoria, ubicacion, evidencia)
               VALUES ('$usuario_id', '$titulo', '$descripcion', '$fecha_denuncia', '$estado', '$categoria', '$ubicacion', '$evidencia')";
 
     if ($conexion->query($query)) {
-        // Redirigir a la página mapaDenuncias.php con los datos de la denuncia
         header("Location: mapaDenuncias.php?id_usuario=$usuario_id");
         exit();
     } else {
         echo "Error al registrar la denuncia: " . $conexion->error;
     }
 
-    // Cerrar la conexión
     $conexion->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -85,36 +107,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </head>
 <body>
-<header>
-        <nav class="navbar">
-            <div class="logo">
-                <a href="#"><img src="img/logo.png" alt="Logo" class="logo-img"></a>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.php">Inicio</a></li>
-                <li><a href="mapaDenuncias.php">Mapa de Denuncias</a></li>
-                <li><a href="contacto.php">Contacto</a></li>
-            </ul>
-            <div class="user-actions">
-                <div class="nav-buttons">
-                    <?php if ($usuario_nombre): ?>
-                        <p>Bienvenido, <?php echo htmlspecialchars($usuario_nombre); ?>!</p>
-                        <a href="mostrarUsuario.php?id=<?php echo htmlspecialchars($usuario_id); ?>">
-                            <img src="img/tuerca.png" alt="Ajustes" class="settings-icon">
-                        </a>
-                    <?php else: ?>
-                        <button onclick="window.location.href='crearCuenta.php'" class="btn-crear-cuenta">Crear Usuario</button>
-                        <button onclick="window.location.href='iniciarSesion.php'" class="btn-iniciar-sesion">Iniciar Sesión</button>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </nav>
-    </header>
     <main>
         <section>
             <h2>Registrar Denuncia</h2>
             <form action="" method="POST" id="form-denuncia" enctype="multipart/form-data">
-                <!-- Campo oculto para el usuario_id -->
+
                 <input type="hidden" name="usuario_id" value="<?php echo $usuario_id; ?>">
 
                 <div class="form-group">
@@ -161,74 +158,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
-    // Crear el mapa
-    const map = L.map('mi_mapa').setView([-17.3935, -66.157], 14);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+        const map = L.map('mi_mapa').setView([-17.3935, -66.157], 14);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
 
-    let limitesCochabamba; // Variable para los límites desde el archivo GeoJSON
+        let limitesCochabamba;
 
-    // Cargar los límites desde el archivo GeoJSON
-    fetch('export.geojson') // Reemplaza con la ruta correcta a tu archivo
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("No se pudo cargar el archivo GeoJSON.");
-            }
-            return response.json();
-        })
-        .then(data => {
-            limitesCochabamba = L.geoJSON(data, {
-                style: {
-                    color: '#ff7800', // Color de los límites
-                    weight: 2, // Grosor de la línea
-                    fillColor: '#fffcf5', // Color de relleno
-                    fillOpacity: 0.4 // Opacidad del relleno
+        fetch('export.geojson') 
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("No se pudo cargar el archivo GeoJSON.");
                 }
-            }).addTo(map);
+                return response.json();
+            })
+            .then(data => {
+                limitesCochabamba = L.geoJSON(data, {
+                    style: {
+                        color: '#ff7800', 
+                        weight: 2, 
+                        fillColor: '#fffcf5', 
+                        fillOpacity: 0.4 
+                    }
+                }).addTo(map);
 
-            map.fitBounds(limitesCochabamba.getBounds()); // Ajustar el mapa a los límites del área
-        })
-        .catch(error => console.error("Error al cargar el GeoJSON:", error));
+                map.fitBounds(limitesCochabamba.getBounds()); 
+            })
+            .catch(error => console.error("Error al cargar el GeoJSON:", error));
 
-    let selectedMarker; // Marcador seleccionado
+        let selectedMarker; 
 
-    // Función para verificar si la ubicación está dentro del área utilizando el GeoJSON
-    function isInsideArea(lat, lng) {
-        if (!limitesCochabamba) return false;
-        const point = L.latLng(lat, lng);
-        return limitesCochabamba.getLayers().some(layer => layer.getBounds().contains(point));
-    }
-
-    // Evento click en el mapa
-    map.on('click', (event) => {
-        const { lat, lng } = event.latlng;
-
-        if (isInsideArea(lat, lng)) {
-            // Eliminar marcador anterior si existe
-            if (selectedMarker) {
-                map.removeLayer(selectedMarker);
-            }
-
-            // Crear nuevo marcador y permitir arrastrarlo
-            selectedMarker = L.marker([lat, lng], { draggable: true }).addTo(map)
-                .bindPopup('Ubicación seleccionada dentro de Cochabamba').openPopup();
-
-            // Actualizar campo de texto con las coordenadas
-            document.getElementById('ubicacion').value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-
-            // Evento al arrastrar el marcador
-            selectedMarker.on('dragend', (e) => {
-                const { lat: newLat, lng: newLng } = e.target.getLatLng();
-                if (isInsideArea(newLat, newLng)) {
-                    // Actualizar coordenadas en el campo de texto
-                    document.getElementById('ubicacion').value = `${newLat.toFixed(6)}, ${newLng.toFixed(6)}`;
-                }
-            });
-        } else {
-            alert("La ubicación seleccionada no está dentro de los límites del municipio de Cochabamba.");
+        function isInsideArea(lat, lng) {
+            if (!limitesCochabamba) return false;
+            const point = L.latLng(lat, lng);
+            return limitesCochabamba.getLayers().some(layer => layer.getBounds().contains(point));
         }
-    });
+
+        map.on('click', (event) => {
+            const { lat, lng } = event.latlng;
+
+            if (isInsideArea(lat, lng)) {
+                if (selectedMarker) {
+                    map.removeLayer(selectedMarker);
+                }
+
+                selectedMarker = L.marker([lat, lng], { draggable: true }).addTo(map)
+                    .bindPopup('Ubicación seleccionada dentro de Cochabamba').openPopup();
+
+                document.getElementById('ubicacion').value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+
+                selectedMarker.on('dragend', (e) => {
+                    const { lat: newLat, lng: newLng } = e.target.getLatLng();
+                    if (isInsideArea(newLat, newLng)) {
+                        document.getElementById('ubicacion').value = `${newLat.toFixed(6)}, ${newLng.toFixed(6)}`;
+                    }
+                });
+            } else {
+                alert("La ubicación seleccionada no está dentro de los límites del municipio de Cochabamba.");
+            }
+        });
     </script>
 </body>
 </html>

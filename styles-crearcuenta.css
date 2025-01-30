@@ -1,85 +1,27 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background: url('img/PortadaCuentas.png') no-repeat center center fixed;
+    background-size: cover;
     color: #333;
+    margin: 0;
+    padding: 0;
     line-height: 1.6;
-    margin:0;
-    padding:0;
-}
-
-.navbar {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #aaf683;;
-    padding: 1rem 2rem;
-}
-
-.navbar .logo img {
-    width: 120px;
-}
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 1.5rem;
-}
-
-.nav-links a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 1.1rem;
-    transition: color 0.3s;
-}
-
-.nav-links a:hover {
-    color: #ffd97d;
-}
-
-/* Estilos para los botones de "Crear usuario" e "Iniciar sesión" */
-.nav-buttons .btn-crear-cuenta,
-.nav-buttons .btn-iniciar-sesion {
-    background-color: #ff9b85; /* Color base */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Pequeño efecto de sombra */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
-}
-
-/* Hover: Cambia el color y efecto */
-.nav-buttons .btn-crear-cuenta:hover,
-.nav-buttons .btn-iniciar-sesion:hover {
-    background-color: #e76f51; /* Color más oscuro */
-    transform: scale(1.05); /* Crecimiento */
-}
-
-/* Active: Simula una presión del botón */
-.nav-buttons .btn-crear-cuenta:active,
-.nav-buttons .btn-iniciar-sesion:active {
-    transform: scale(0.95); /* Reduce ligeramente el tamaño */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reducción de sombra */
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    height: 100vh; /* Ocupar toda la altura de la pantalla */
 }
 
 .form-section {
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente */
     padding: 2rem;
-    margin: 2rem auto;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
+    width: 30%; /* Ajusta el ancho del formulario */
+    min-width: 500px; /* Tamaño mínimo */
+    max-width: 1200px; /* Tamaño máximo */
 }
+
 
 .form-section h2 {
     text-align: center;
@@ -87,32 +29,48 @@ body {
     color: #333;
 }
 
-.form-section form {
-    display: flex;
-    flex-direction: column;
-}
 .form-section label {
     margin-bottom: 0.5rem;
     color: #555;
 }
-.form-section input {
+
+.form-section input,
+.form-section select {
     padding: 0.5rem;
     margin-bottom: 1rem;
     border: 1px solid #ccc;
     border-radius: 5px;
+    width: 100%;
 }
 
-.form-section button {
-    background-color: #aaf683;
+.form-section .button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-section button,
+.form-section .btn-volver {
+    background-color: #2196F3; /* Azul */
     color: white;
     border: none;
     border-radius: 5px;
-    padding: 0.75rem;
+    padding: 0.75rem 1.5rem;
     font-size: 1rem;
+    font-weight: bold;
     cursor: pointer;
+    text-align: center;
+    text-decoration: none; /* Sin subrayado para el enlace */
     transition: background-color 0.3s ease;
 }
 
-.form-section button:hover {
-    background-color: #8fd460;
+.form-section button:hover,
+.form-section .btn-volver:hover {
+    background-color: #1769aa; /* Azul más oscuro */
+}
+
+.form-section button:active,
+.form-section .btn-volver:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }

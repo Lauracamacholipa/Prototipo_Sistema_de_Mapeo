@@ -6,28 +6,30 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #ffffff;
     color: #333;
     line-height: 1.6;
 }
 
-/* Navbar */
+/* Navbar -------------------------------------------------------------------------------*/
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #aaf683;;
-    padding: 1rem 2rem;
+    background-color: #80c927; 
+    padding: 2px 7rem;
 }
 
 .navbar .logo img {
-    width: 120px;
+    height: auto; /* Asegura que la imagen del logo tenga el mismo alto que el navbar */
+    width: 100px; /* Mantiene la proporción de la imagen */
+    max-width: 100%; 
 }
 
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 1.5rem;
+    gap: 5rem;
 }
 
 .nav-links a {
@@ -44,7 +46,7 @@ body {
 /* Estilos para los botones de "Crear usuario" e "Iniciar sesión" */
 .nav-buttons .btn-crear-cuenta,
 .nav-buttons .btn-iniciar-sesion {
-    background-color: #ff9b85; /* Color base */
+    background-color: #f46342; /* Color base */
     color: white;
     border: none;
     border-radius: 5px;
@@ -60,7 +62,7 @@ body {
 /* Hover: Cambia el color y efecto */
 .nav-buttons .btn-crear-cuenta:hover,
 .nav-buttons .btn-iniciar-sesion:hover {
-    background-color: #e76f51; /* Color más oscuro */
+    background-color: #da431d; /* Color más oscuro */
     transform: scale(1.05); /* Crecimiento */
 }
 
@@ -71,12 +73,23 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reducción de sombra */
 }
 
-
+/* Estilos para el bloque de usuario */
 .user-actions {
     display: flex;
-    gap: 1rem;
-    
+    justify-content: flex-end; /* Alinea el contenido a la derecha */
+    align-items: center; /* Alinea el texto y la imagen verticalmente */
+    gap: 10px; /* Espacio entre el texto y el icono */
 }
+
+.user-actions p {
+    color: white; /* Color de texto blanco */
+    margin: 0; /* Elimina márgenes innecesarios */
+}
+
+.user-actions a {
+    display: inline-block; /* Asegura que el icono de la tuerca se alinee correctamente */
+}
+
 
 .user-actions img {
     width: 30px;
@@ -84,64 +97,60 @@ body {
     cursor: pointer;
 }
 
-/* Hero Section */
-/* Hero Section */
+/* Hero Section -----------------------------------------------------*/
 .hero {
+    position: relative;
+    height: 90vh;  
+    background: url('img/portadaIndex.jpg') center/cover no-repeat;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 2rem;
-    background-color: #f4f4f4;
+    justify-content: flex-start; 
+    align-items: center; 
+    padding: 0 3rem; /* Margen horizontal para la sección */
+}
+
+.hero-overlay {
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semi-transparente */
+    padding: 1.5rem; /* Reducido un poco el padding */
+    width: 40%; /* Ancho del contenedor de texto */
+    border-radius: 8px;  /* Bordes redondeados */
+    box-shadow: 0 4px 10px rgba(91, 91, 91, 0.2);
+    margin-left: 3rem; /* Márgenes para que no quede pegado al borde */
 }
 
 .hero .hero-text {
-    flex: 1;
-    margin-right: 2rem;
     text-align: left;
+    color: #80c927; /* Color de texto igual al navbar */
 }
 
 .hero h1 {
-    font-size: 2.5rem;
-    color: #1d3557;
+    font-size: 4rem;  /* Reducción del tamaño del texto */
     margin-bottom: 1rem;
 }
 
 .hero .value-proposition {
-    font-size: 1.2rem;
-    color: #457b9d;
+    font-size: 1.3rem;  /* Reducción del tamaño del texto */
+    color: #2b590f; /* Color más suave para el subtítulo */
     margin-bottom: 1.5rem;
 }
 
 .hero .cta-button {
-    background-color: #ff9b85;
+    background-color: #f46342;
     color: white;
-    padding: 0.8rem 1.5rem;
+    padding: 0.8rem 1.8rem; /* Un poco menos de padding */
     border: none;
     border-radius: 5px;
-    font-size: 1.2rem;
+    font-size: 1.1rem;  /* Fuente ligeramente más pequeña */
     cursor: pointer;
     text-decoration: none;
+    transition: background-color 0.3s;
 }
 
 .hero .cta-button:hover {
-    background-color: #e76f51;
+    background-color: #da431d;
 }
 
-.hero .hero-media {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-}
-
-.hero .hero-media img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-
-/* Services Section */
+/* Services Section -------------------------------------------------------*/
 .services-section {
     text-align: center;
     padding: 2rem;
@@ -200,10 +209,24 @@ body {
     color: #666;
 }
 
-/* Footer */
+/* Footer --------------------------------------------------------------------------*/
 footer {
-    background-color:#aaf683;;
-    color: #fff;
-    text-align: center;
-    padding: 1.5rem 0;
+    background-color: #80c927; 
+    width: 100%; 
+    height: 30vh; 
+    min-height: 150px; 
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    color: white; 
+    position: relative;
 }
+
+footer img {
+    max-width: 100%; 
+    width: 40%; 
+    height: auto; 
+    position: absolute; 
+}
+
+

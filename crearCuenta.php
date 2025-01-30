@@ -83,55 +83,46 @@ mysqli_close($enlace);
     </script>
 </head>
 <body>
-<header>
-    <nav class="navbar">
-        <div class="logo">
-            <a href="#"><img src="img/logo.png" alt="Logo" class="logo-img"></a>
-        </div>
-        <ul class="nav-links">
-            <li><a href="index.php">Inicio</a></li>
-            <li><a href="mapaDenuncias.php">Mapa de denuncias</a></li>
-            <li><a href="contacto.php">Contacto</a></li>
-        </ul>
-    </nav>
-</header>
+    <main>
+        <section class="form-section">
+            <h2>Crear Cuenta</h2>
+            
+            <!-- Mostrar mensaje de error si existe -->
+            <?php if (!empty($mensaje)): ?>
+                <div class="mensaje-error"><?php echo $mensaje; ?></div>
+            <?php endif; ?>
 
-<main>
-    <section class="form-section">
-        <h2>Crear Cuenta</h2>
-        
-        <!-- Mostrar mensaje de error si existe -->
-        <?php if (!empty($mensaje)): ?>
-            <div class="mensaje-error"><?php echo $mensaje; ?></div>
-        <?php endif; ?>
+            <form action="crearCuenta.php" method="POST">
+                <label for="nombre">Nombre Completo:</label>
+                <input type="text" id="nombre" name="nombre" required><br>
 
-        <form action="crearCuenta.php" method="POST">
-            <label for="nombre">Nombre Completo:</label>
-            <input type="text" id="nombre" name="nombre" required><br>
+                <label for="email">Correo Electrónico:</label>
+                <input type="email" id="email" name="email" required><br>
 
-            <label for="email">Correo Electrónico:</label>
-            <input type="email" id="email" name="email" required><br>
+                <label for="contrasena">Contraseña:</label>
+                <input type="password" id="contrasena" name="contraseña" required><br>
 
-            <label for="contrasena">Contraseña:</label>
-            <input type="password" id="contrasena" name="contraseña" required><br>
+                <label for="telefono">Teléfono:</label>
+                <input type="text" id="telefono" name="telefono" required><br>
 
-            <label for="telefono">Teléfono:</label>
-            <input type="text" id="telefono" name="telefono" required><br>
+                <label for="rol">Rol:</label>
+                <select id="rol" name="rol" required onchange="toggleAdminPasswordField()">
+                    <option value="usuario" selected>Usuario</option>
+                    <option value="admin">Administrador</option>
+                </select><br>
 
-            <label for="rol">Rol:</label>
-            <select id="rol" name="rol" required onchange="toggleAdminPasswordField()">
-                <option value="usuario">Usuario</option>
-                <option value="admin">Administrador</option>
-            </select><br>
+                <div id="admin-password-field" style="display: none;">
+                    <label for="contrasena_admin">Contraseña Administrador:</label>
+                    <input type="password" id="contrasena_admin" name="contrasena_admin"><br>
+                </div>
 
-            <div id="admin-password-field">
-                <label for="contrasena_admin">Contraseña Administrador:</label>
-                <input type="password" id="contrasena_admin" name="contrasena_admin"><br>
-            </div>
-
-            <button type="submit">Crear Cuenta</button>
-        </form>
-    </section>
-</main>
+                <!--<button type="submit">Crear Cuenta</button>-->
+                <div class="button-container">
+                    <button type="submit">Crear Cuenta</button>
+                    <a href="index.php" class="btn-volver">Volver</a>
+                </div>
+            </form>
+        </section>
+    </main>
 </body>
 </html>
